@@ -1,4 +1,5 @@
-# DWM_config_src
+# DWM_config_src_OLD
+# Changing from DWM X.Org to Wayland Hyprland
 
 https://ffprofile.com/#start
 
