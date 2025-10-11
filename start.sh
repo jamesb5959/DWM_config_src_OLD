@@ -6,14 +6,29 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Ask if the setup is for work or personal use
-read -p "Is this setup for work or personal use? (work/personal): " setup_type
+read -p "Is this setup for work or personal use? (work/laptop/PC): " setup_type
 
 # Validate the input
 # Define the required packages
 if [[ "$setup_type" == "work" ]]; then
     required_packages=("xss-lock" "mtr" "qemu" "libvirt" "virt-manager" "qemu-full" "dnsmasq" "bridge-utils" "ttf-jetbrains-mono-nerd" "whois" "ufw" "firefox" "xwallpaper" "nsxiv" "xorg-server" "xorg-xrdb" "xorg-xinit" "picom" "neovim" "fd" "ripgrep" "git" "neofetch" "nvidia" "mpv" "htop" "python-pywal" "zsh")
-elif [[ "$setup_type" == "personal" ]]; then
-    required_packages=("xss-lock" "mtr" "qemu" "libvirt" "virt-manager" "qemu-full" "dnsmasq" "bridge-utils" "ttf-jetbrains-mono-nerd" "whois" "ufw" "firefox" "discord" "xwallpaper" "nsxiv" "xorg-server" "xorg-xrdb" "xorg-xinit" "picom" "neovim" "fd" "ripgrep" "git" "neofetch" "asusctl" "supergfxctl" "rog-control-center" "nvidia" "mpv" "htop" "python-pywal" "zsh")
+elif [[ "$setup_type" == "laptop" ]]; then
+    required_packages=("xss-lock" "mtr" "qemu" "libvirt" "virt-manager" "qemu-full" "dnsmasq" "bridge-utils" "ttf-jetbrains-mono-nerd" "whois" "ufw" "firefox" "discord" "xwallpaper" "nsxiv" "xorg-server" "xorg-xrdb" "xorg-xinit" "picom" "neovim" "fd" "ripgrep" "git" "neofetch" "nvidia" "mpv" "htop" "python-pywal" "zsh")
+    echo "Asus linux installing."
+    pacman-key --recv-keys 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
+    pacman-key --finger 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
+    pacman-key --lsign-key 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
+    pacman-key --finger 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
+    echo "" >> /etc/pacman.conf
+    echo "[g14]" >> /etc/pacman.conf
+    echo "Server = https://arch.asus-linux.org" >> /etc/pacman.conf
+    pacman -Suy
+    echo "Asus linux install completed."
+    pacman -Si asusctl supergfxctl rog-control-center
+    systemctl enable --now power-profiles-daemon.service
+    systemctl enable --now supergfxd
+elif [[ "$setup_type" == "PC" ]]; then
+    required_packages=("xss-lock" "mtr" "qemu" "libvirt" "virt-manager" "qemu-full" "dnsmasq" "bridge-utils" "ttf-jetbrains-mono-nerd" "whois" "ufw" "firefox" "discord" "xwallpaper" "nsxiv" "xorg-server" "xorg-xrdb" "xorg-xinit" "picom" "neovim" "fd" "ripgrep" "git" "neofetch" "nvidia" "mpv" "htop" "python-pywal" "zsh")
 else
     echo "Invalid input. Please specify 'work' or 'personal'."
     exit 1
@@ -65,24 +80,7 @@ check_and_install_packages_void() {
 # Check and install required packages
 if grep -q 'ID=arch' /etc/os-release; then
     echo "Running on Arch Linux, proceeding..."
-    curl -O https://blackarch.org/strap.sh
-    chmod +x strap.sh
-    ./strap.sh
-    pacman -Syu
-    echo "Blackarch install completed."
-    echo "Asus linux installing."
-    pacman-key --recv-keys 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
-    pacman-key --finger 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
-    pacman-key --lsign-key 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
-    pacman-key --finger 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35
-    echo "" >> /etc/pacman.conf
-    echo "[g14]" >> /etc/pacman.conf
-    echo "Server = https://arch.asus-linux.org" >> /etc/pacman.conf
-    pacman -Suy
-    echo "Asus linux install completed."
     check_and_install_packages_arch
-    systemctl enable --now power-profiles-daemon.service
-    systemctl enable --now supergfxd
 elif grep -q 'ID=void' /etc/os-release; then
     echo "Running on Void Linux, proceeding..."
     check_and_install_packages_void
@@ -107,7 +105,7 @@ for dir in dmenu st dwm slstatus; do
     cd ..
 done
 
-cd /home/james/DWM_config_src/
+cd /home/james/DWM_config_src_OLD/
 mv .zshrc /home/james/
 mv .bashrc /home/james/
 # Move '.xinitrc' and '.vimrc' to your home directory
