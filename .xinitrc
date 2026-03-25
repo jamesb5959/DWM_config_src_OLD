@@ -1,5 +1,5 @@
 slstatus &
-exec /usr/local/bin/dwm &
-xwallpaper --no-randr --tile /home/james/.config/wallpaper/road.png  &
+xwallpaper --no-randr --tile /home/james/.config/wallpaper/road.png &
 xss-lock -- slock &
-picom
+picom &
+exec /usr/local/bin/dwm
